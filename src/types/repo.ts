@@ -15,3 +15,8 @@ export interface REPO {
   description: string;
   lastUpdate: string;
 }
+
+export interface DetailProps {
+  repo: string | undefined;
+  owner: string | undefined;
+}

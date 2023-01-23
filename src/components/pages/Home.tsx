@@ -21,15 +21,17 @@ export const Home = () => {
         currentPage={currentPage}
         perPage={perPage}
       />
-      <ListPage
-        currentPage={currentPage}
-        perPage={perPage}
-        setCurrentPage={setCurrentPage}
-        setPerPage={setPerPage}
-        query={query}
-        sort={sort}
-        order={order}
-      />
+      <div className="w-3/5 m-auto">
+        <ListPage
+          currentPage={currentPage}
+          perPage={perPage}
+          setCurrentPage={setCurrentPage}
+          setPerPage={setPerPage}
+          query={query}
+          sort={sort}
+          order={order}
+        />
+      </div>
     </div>
   );
 };

@@ -3,7 +3,6 @@ import store from "src/store";
 import { getRepo } from "src/store/repos/actions";
 import { DownOutlined } from "@ant-design/icons";
 import type { MenuProps } from "antd";
-import { useState } from "react";
 
 const { Search } = Input;
 
@@ -58,8 +57,6 @@ export const SearchPage: React.FC<Props> = ({
   currentPage,
   perPage,
 }) => {
-  const [loadings, setLoadings] = useState<boolean[]>([]);
-
   const handleMenuClick: MenuProps["onClick"] = (e) => {
     setSort(e.key);
     store.dispatch(

@@ -1,4 +1,4 @@
-import { REPO } from "src/types/repo";
+import { DetailProps, REPO } from "src/types/repo";
 import { repoActionTypes } from "./actionType";
 
 export const toggleLoading = (toggle: boolean) => ({
@@ -33,7 +33,7 @@ export const getRepo = (query: any) => {
     const order = query.order ? query.order : "desc";
     const per_page = query.per_page ? query.per_page : 10;
     const page = query.page ? query.page : 1;
-
+    dispatch(toggleLoading(true));
     fetch(
       `${process.env.REACT_APP_GITHUB_API}search/repositories?q=${q}&sort=${sort}&order=${order}&per_page=${per_page}&page=${page}`,
       {
@@ -52,12 +52,16 @@ export const getRepo = (query: any) => {
       })
       .catch((error) => {
         console.error(error);
+      })
+      .finally(() => {
+        dispatch(toggleLoading(false));
       });
   };
 };
 
-export const getRepoDetail = (props: { repo: string; owner: string }) => {
+export const getRepoDetail = (props: DetailProps) => {
   return (dispatch: any) => {
+    dispatch(toggleLoading(true));
     fetch(
       `${process.env.REACT_APP_GITHUB_API}repos/${props.owner}/${props.repo}`,
       {
@@ -75,6 +79,9 @@ export const getRepoDetail = (props: { repo: string; owner: string }) => {
       })
       .catch((error) => {
         console.error(error);
+      })
+      .finally(() => {
+        dispatch(toggleLoading(false));
       });
     return "";
   };

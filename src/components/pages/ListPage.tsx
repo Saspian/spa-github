@@ -1,12 +1,19 @@
-import { Pagination, PaginationProps } from "antd";
+import { Card, Pagination, PaginationProps } from "antd";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import store from "src/store";
 import { RootState } from "src/store/reducers";
-import { getRepo, getRepoDetail } from "src/store/repos/actions";
+import { getRepo } from "src/store/repos/actions";
 import { STATE_TYPE } from "src/types/repo";
-
+import {
+  UserOutlined,
+  StarOutlined,
+  EyeOutlined,
+  ForkOutlined,
+  FieldTimeOutlined,
+} from "@ant-design/icons";
+import dayjs from "dayjs";
 interface Props {
   query: string;
   sort: string;
@@ -38,9 +45,7 @@ export const ListPage: React.FC<Props> = ({
   }, [repoy]);
 
   const handleRepoClick = (repo: string, owner: string) => {
-    const a = { repo, owner };
-    store.dispatch(getRepoDetail(a));
-    navigate("/detail");
+    navigate(`/detail/${owner}/${repo}`);
   };
 
   const onChange: PaginationProps["onChange"] = (pageNumber) => {
@@ -50,36 +55,72 @@ export const ListPage: React.FC<Props> = ({
     );
   };
 
-  const onPageSizeChange = (current: number, size: number) => {
+  const onPageSizeChange = async (current: number, size: number) => {
     setPerPage(size);
-    store.dispatch(getRepo({ q: query, sort, order, page: 1, per_page: size }));
+    await store.dispatch(
+      getRepo({ q: query, sort, order, page: currentPage, per_page: size }),
+    );
   };
-
   return (
-    <div className="ml-60">
-      {repoList?.repo?.map((r: any) => (
-        <div
-          key={r.id}
-          className="mb-4"
-          onClick={() => handleRepoClick(r.name, r.owner?.login)}
-        >
-          Repo name : {r.full_name} <br />
-          Description: {r.description} <br />
-          Author: {r.owner?.login} <br />
-          stars: {r.stargazers_count} <br />
-          watchers: {r.subscribers_count} <br />
-          forks: {r.forks} <br />
-          Last updated: {r.updated_at} <br />
-        </div>
-      ))}
+    <>
+      <div className="h-[85vh] overflow-y-auto">
+        {repoy?.loading ? (
+          <>
+            <Card loading={repoy.loading} bordered></Card>
+          </>
+        ) : (
+          repoList?.repo?.map((r: any) => (
+            <div key={r.id} className="mb-4">
+              <Card
+                className="shadow-xl"
+                title={
+                  <div
+                    className="cursor-pointer"
+                    onClick={() => handleRepoClick(r.name, r.owner?.login)}
+                  >
+                    {r.full_name}
+                  </div>
+                }
+                bordered
+              >
+                <p>{r.description?.substring(0, 256)}</p>
+                <div className="flex items-center" title="author">
+                  <UserOutlined className="mr-2" />{" "}
+                  <span className=""> {r.owner?.login} </span>
+                </div>
+
+                <div className="flex items-center" title="star">
+                  <StarOutlined className="mr-2" />{" "}
+                  <span className=""> {r.stargazers_count} </span>
+                </div>
+                <div className="flex items-center" title="watcher">
+                  <EyeOutlined className="mr-2" />{" "}
+                  <span className=""> {r.watchers} </span>
+                </div>
+                <div className="flex items-center" title="fork">
+                  <ForkOutlined className="mr-2" />{" "}
+                  <span className=""> {r.forks} </span>
+                </div>
+                <div className="flex items-center" title="last updated">
+                  <FieldTimeOutlined className="mr-2" />{" "}
+                  <span className="">
+                    {" "}
+                    {dayjs(r.updated_at).format("YYYY-MM-DD")}{" "}
+                  </span>
+                </div>
+              </Card>
+            </div>
+          ))
+        )}
+      </div>
       <Pagination
-        defaultCurrent={currentPage}
+        className="flex justify-center"
         total={total}
         onChange={onChange}
         pageSize={perPage}
         onShowSizeChange={(c, s) => onPageSizeChange(c, s)}
-        pageSizeOptions={["3", "10", "25", "50"]}
+        pageSizeOptions={["10", "25", "50"]}
       />
-    </div>
+    </>
   );
 };

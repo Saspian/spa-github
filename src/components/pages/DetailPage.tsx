@@ -1,41 +1,78 @@
-import { Button } from "antd";
-import { LeftOutlined } from "@ant-design/icons";
-import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { RootState } from "src/store/reducers";
-import { STATE_TYPE } from "src/types/repo";
+import { Button, Card } from "antd";
+import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
+import store from "src/store";
+import { getRepoDetail } from "src/store/repos/actions";
 
 export const DetailPage = () => {
+  const { owner, repo } = useParams();
   const navigate = useNavigate();
-  const repoState: STATE_TYPE = useSelector((state: RootState) => state.repos);
   const [detailRepo, setDetailRepo] = useState<any>({});
 
   useEffect(() => {
-    setDetailRepo(repoState.repoDetail);
-  }, [repoState]);
+    store.dispatch(getRepoDetail({ repo, owner }));
+  }, [repo, owner]);
+
+  store.subscribe(() => {
+    setDetailRepo(store.getState().repos);
+  });
 
   const ownerPage = (name: string) => {
     window.open("https://github.com/" + name, "_blank");
   };
 
   const repoPage = (name: string, repoName: string) => {
-    window.open("https://github.com/" + name + repoName, "_blank");
+    window.open("https://github.com/" + name + "/" + repoName, "_blank");
   };
   return (
-    <div>
-      {" "}
-      <Button onClick={() => navigate("/")}>
-        <LeftOutlined /> Go back
-      </Button>
-      <div onClick={() => ownerPage(detailRepo?.owner?.login)}>
-        Full owner name: {detailRepo?.owner?.login}
+    <div className="w-3/5 my-4 mx-auto">
+      <div className="flex justify-between relative">
+        <Button size="small" className="absolute" onClick={() => navigate("/")}>
+          Back
+        </Button>
+        <div></div>
+        <div className="repository font-bold text-center">
+          Repository Detail
+        </div>
+        <div></div>
       </div>
-      <div onClick={() => repoPage(detailRepo?.owner?.login, detailRepo?.name)}>
-        Repository name: {detailRepo?.name}
-      </div>
-      <div>Open issues: {detailRepo?.open_issues}</div>
-      <div>Default branch: {detailRepo?.default_branch}</div>
+      {detailRepo.loading ? (
+        <Card loading={detailRepo.loading} bordered></Card>
+      ) : (
+        <>
+          <div className="mt-4">
+            <span className="font-bold">Full owner name: </span>
+            <span
+              className="hover:underline cursor-pointer"
+              onClick={() => ownerPage(detailRepo?.repoDetail?.owner?.login)}
+            >
+              {detailRepo?.repoDetail?.owner?.login}
+            </span>
+          </div>
+          <div>
+            <span className="font-bold">Repository name: </span>
+            <span
+              className="hover:underline cursor-pointer"
+              onClick={() =>
+                repoPage(
+                  detailRepo?.repoDetail?.owner?.login,
+                  detailRepo?.repoDetail?.name,
+                )
+              }
+            >
+              {detailRepo?.repoDetail?.name}
+            </span>
+          </div>
+          <div>
+            <span className="font-bold">Open issues:</span>{" "}
+            {detailRepo?.repoDetail?.open_issues}
+          </div>
+          <div>
+            <span className="font-bold">Default branch: </span>
+            {detailRepo?.repoDetail?.default_branch}
+          </div>
+        </>
+      )}
     </div>
   );
 };
