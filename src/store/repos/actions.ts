@@ -1,4 +1,5 @@
-import { DetailProps, REPO } from "src/types/repo";
+import { DetailProps, Order, REPO } from "src/types/repo";
+import store from "..";
 import { repoActionTypes } from "./actionType";
 
 export const toggleLoading = (toggle: boolean) => ({
@@ -26,14 +27,40 @@ export const fetchPaginated = (repoCount: any) => ({
   payload: repoCount,
 });
 
-export const getRepo = (query: any) => {
+export const setQuery = (query: string) => ({
+  type: repoActionTypes.GET_QUERY,
+  payload: query,
+});
+
+export const setSort = (sort: string) => ({
+  type: repoActionTypes.GET_SORT,
+  payload: sort,
+});
+
+export const setOrder = (order: Order) => ({
+  type: repoActionTypes.GET_ORDER,
+  payload: order,
+});
+
+export const setCurrentPage = (currentPage: number) => ({
+  type: repoActionTypes.GET_CURRENT_PAGE,
+  payload: currentPage,
+});
+
+export const setPerPage = (perPage: number) => ({
+  type: repoActionTypes.GET_PER_PAGE,
+  payload: perPage,
+});
+
+export const getRepo = () => {
   return (dispatch: any) => {
-    const q = query.q ? query.q : "";
-    const sort = query.sort ? query.sort : "stars";
-    const order = query.order ? query.order : "desc";
-    const per_page = query.per_page ? query.per_page : 10;
-    const page = query.page ? query.page : 1;
+    const q = store.getState().query;
+    const sort = store.getState().sort;
+    const order = store.getState().order;
+    const per_page = store.getState().perPage;
+    const page = store.getState().currentPage;
     dispatch(toggleLoading(true));
+    dispatch(setError(""));
     fetch(
       `${process.env.REACT_APP_GITHUB_API}search/repositories?q=${q}&sort=${sort}&order=${order}&per_page=${per_page}&page=${page}`,
       {
@@ -47,10 +74,19 @@ export const getRepo = (query: any) => {
     )
       .then(async (response) => {
         const res = await response.json();
+        if (response.status !== 200) {
+          dispatch(setError(res.message));
+          dispatch(setCurrentPage(1));
+        }
+        if (res.total_count === 0) {
+          dispatch(setError("No repository found"));
+        }
         dispatch(fetchPaginated(res.total_count));
         dispatch(fetchRepo(res.items));
       })
       .catch((error) => {
+        const { message } = error;
+        dispatch(setError(message));
         console.error(error);
       })
       .finally(() => {

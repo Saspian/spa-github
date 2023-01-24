@@ -6,6 +6,11 @@ export enum repoActionTypes {
   GET_REPO_LIST = "GET_REPO_LIST",
   GET_REPO_DETAIL = "GET_REPO_DETAIL",
   GET_TOTAL = "GET_TOTAL",
+  GET_QUERY = "GET_QUERY",
+  GET_SORT = "GET_SORT",
+  GET_ORDER = "GET_ORDER",
+  GET_CURRENT_PAGE = "GET_CURRENT_PAGE",
+  GET_PER_PAGE = "GET_PER_PAGE",
 }
 
 interface toggleLoading {
@@ -33,9 +38,39 @@ interface getTotal {
   payload: any;
 }
 
+interface getQuery {
+  type: repoActionTypes.GET_QUERY;
+  payload: any;
+}
+
+interface getSort {
+  type: repoActionTypes.GET_SORT;
+  payload: any;
+}
+
+interface getOrder {
+  type: repoActionTypes.GET_ORDER;
+  payload: any;
+}
+
+interface getCurrentPage {
+  type: repoActionTypes.GET_CURRENT_PAGE;
+  payload: any;
+}
+
+interface getPerPage {
+  type: repoActionTypes.GET_PER_PAGE;
+  payload: any;
+}
+
 export type repoAction =
   | toggleLoading
   | setError
   | getRepoList
   | getRepoDetail
-  | getTotal;
+  | getTotal
+  | getQuery
+  | getSort
+  | getOrder
+  | getCurrentPage
+  | getPerPage;
