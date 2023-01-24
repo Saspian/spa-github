@@ -1,8 +1,8 @@
 # Assessment
 
-It is a sngle page application for github repositories listing. The list of git hub repositories is fetched from an unauthenticated APIs. With the help of basic UI, user will be able to search, sort, order and paginate the search result. User can also interact with application by clicking on repository name which will redirect to original github repository profile.
+It is a single page application for github repositories listing. The list of git hub repositories is fetched from an unauthenticated APIs. With the help of basic UI, user will be able to search, sort, order and paginate the search result. User can also interact with application by clicking on repository name which will redirect to original github repository profile.
 
-The projec is built upon, React Typescript, with basic css from TailwindCSS and little to none UI component from Antd UI library.
+The project is built upon, React Typescript, with basic css from TailwindCSS and little to none UI component from Antd UI library. This also includes few unit test to check if component are rendered properly.
 
 ## To start the project
 
