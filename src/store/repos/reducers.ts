@@ -6,7 +6,12 @@ export const initialState: STATE_TYPE = {
   error: "",
   repo: [],
   repoDetail: null,
-  total: 500,
+  total: 1000,
+  query: "",
+  sort: "stars",
+  order: "desc",
+  currentPage: 1,
+  perPage: 10,
 };
 
 export const repoReducer = (
@@ -38,6 +43,31 @@ export const repoReducer = (
       return {
         ...state,
         total: action.payload,
+      };
+    case repoActionTypes.GET_QUERY:
+      return {
+        ...state,
+        query: action.payload,
+      };
+    case repoActionTypes.GET_SORT:
+      return {
+        ...state,
+        sort: action.payload,
+      };
+    case repoActionTypes.GET_ORDER:
+      return {
+        ...state,
+        order: action.payload,
+      };
+    case repoActionTypes.GET_CURRENT_PAGE:
+      return {
+        ...state,
+        currentPage: action.payload,
+      };
+    case repoActionTypes.GET_PER_PAGE:
+      return {
+        ...state,
+        perPage: action.payload,
       };
     default:
       return state;
