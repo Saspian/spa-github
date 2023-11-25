@@ -13,6 +13,7 @@
     "antd": "^5.1.6",
     "axios": "^1.2.3",
     "dayjs": "^1.11.7",
+    "gh-pages": "^6.1.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-redux": "^8.0.5",
@@ -23,6 +24,7 @@
     "typescript": "*",
     "web-vitals": "^2.1.0"
   },
+  "homepage":"https://saspian.github.io/spa-github/",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
@@ -30,7 +32,8 @@
     "eject": "react-scripts eject",
     "coverage": "yarn test --coverage --watchAll --collectCoverageFrom='src/components/**/*{ts,tsx}'",
     "lint": "eslint .",
-    "lint:fix": "eslint --fix ."
+    "lint:fix": "eslint --fix .",
+    "deploy":"gh-pages -d build"
   },
   "eslintConfig": {
     "extends": [
