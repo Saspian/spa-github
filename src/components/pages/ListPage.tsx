@@ -17,6 +17,9 @@ import {
   setQuery,
   setCurrentPage,
   setPerPage,
+  setError,
+  setSort,
+  setOrder,
 } from "src/store/repos/actions";
 import { REPO } from "src/types/repo";
 import {
@@ -35,7 +38,7 @@ export const ListPage = () => {
   const navigate = useNavigate();
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string>("");
+  const [error, setErrors] = useState<string>("");
   const [currentPage, setLocalCurrentPage] = useState(1);
   const [perPage, setLocalPerPage] = useState(10);
 
@@ -46,7 +49,7 @@ export const ListPage = () => {
 
   store.subscribe(() => {
     setLoading(store.getState().loading);
-    setError(store.getState().error);
+    setErrors(store.getState().error);
   });
 
   useEffect(() => {
@@ -80,14 +83,21 @@ export const ListPage = () => {
       store.dispatch(setCurrentPage(1)),
       store.dispatch(setPerPage(10)),
       store.dispatch(setError("")),
+      store.dispatch(setSort("stars")),
+      store.dispatch(setOrder("desc")),
     ]);
   };
 
-  console.log(repoList?.length, "@@");
-
   return (
     <div className="relative">
-      {error?.length !== 0 && <i className="text-red-600">{error}</i>}
+      {error?.length !== 0 && (
+        <i className="text-red-600">
+          {error}{" "}
+          <Button size="small" onClick={clearFilter}>
+            X Clear filter
+          </Button>
+        </i>
+      )}
       {repoList?.length !== 0 && repoList?.length !== undefined && (
         <div className="flex justify-between mb-3">
           <Text>

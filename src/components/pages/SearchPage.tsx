@@ -1,7 +1,9 @@
 import { Input, Select, Form } from "antd";
 import store from "src/store";
 import { getRepo, setOrder, setQuery, setSort } from "src/store/repos/actions";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { RootState } from "src/store/reducers";
 
 const { Search } = Input;
 
@@ -36,8 +38,18 @@ const orderOption = [
 ];
 
 export const SearchPage = () => {
-  const [sort, setLocalSort] = useState<string>("stars");
-  const [order, setLocalOrder] = useState<string>("desc");
+  const [localSort, setLocalSort] = useState<string>("stars");
+  const [localOrder, setLocalOrder] = useState<string>("desc");
+  const [localQuery, setLocalQuery] = useState<string>("");
+  const query = useSelector((state: RootState) => state.query);
+  const sort = useSelector((state: RootState) => state.sort);
+  const order = useSelector((state: RootState) => state.order);
+
+  useEffect(() => {
+    setLocalQuery(query);
+    setLocalSort(sort);
+    setLocalOrder(order);
+  }, [query, sort, order]);
 
   const handleSortChange = (value: any) => {
     store.dispatch(setSort(value));
@@ -56,6 +68,10 @@ export const SearchPage = () => {
     store.dispatch(getRepo());
   };
 
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setLocalQuery(e.target.value);
+  };
+
   return (
     <div className="my-4 flex justify-center">
       <Form.Item label="Search" className="mr-4">
@@ -63,13 +79,15 @@ export const SearchPage = () => {
           data-testid="search-input"
           placeholder="Find repositories"
           onSearch={onSearch}
+          value={localQuery}
           style={{ width: 304 }}
+          onChange={(e) => handleChange(e)}
         />
       </Form.Item>
       <Form.Item label="Sort By" className="mr-4">
         <Select
           data-testid="sort-input"
-          defaultValue={sort}
+          value={localSort}
           style={{ width: 120 }}
           onChange={handleSortChange}
           options={sortOption}
@@ -78,7 +96,7 @@ export const SearchPage = () => {
       <Form.Item label="Order By" className="mr-4">
         <Select
           data-testid="order-input"
-          defaultValue={order}
+          value={localOrder}
           style={{ width: 120 }}
           onChange={handleOrderChange}
           options={orderOption}
