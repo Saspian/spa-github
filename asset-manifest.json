@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/spa-github/static/css/main.b84d5f06.css",
+    "main.js": "/spa-github/static/js/main.f54f406b.js",
+    "static/js/787.9c822272.chunk.js": "/spa-github/static/js/787.9c822272.chunk.js",
+    "index.html": "/spa-github/index.html",
+    "main.b84d5f06.css.map": "/spa-github/static/css/main.b84d5f06.css.map",
+    "main.f54f406b.js.map": "/spa-github/static/js/main.f54f406b.js.map",
+    "787.9c822272.chunk.js.map": "/spa-github/static/js/787.9c822272.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.b84d5f06.css",
+    "static/js/main.f54f406b.js"
+  ]
+}
