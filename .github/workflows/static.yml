@@ -1,0 +1,57 @@
+name: Deploy React site to Pages
+
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build React App
+        # This is where the magic happens for your ENV variables
+        run: npm run build
+        env:
+          # Pulling from Settings -> Secrets and variables -> Actions -> Variables
+          REACT_APP_GITHUB_API: ${{ vars.REACT_APP_GITHUB_API }}
+          REACT_APP_AUTH_KEY: ${{ vars.REACT_APP_AUTH_KEY }}
+          # Pulling from Settings -> Secrets and variables -> Actions -> Secrets
+          REACT_APP_GITHUB_TOKEN: ${{ secrets.MY_GITHUB_TOKEN }}
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          # CRITICAL: We only want to upload the BUILT files, not the whole repo
+          path: './build'
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5
