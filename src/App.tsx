@@ -10,6 +10,7 @@ function App() {
       <Router>
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/home" element={<Home />} />
           <Route path="detail/:owner/:repo" element={<DetailPage />} />
         </Routes>
       </Router>
