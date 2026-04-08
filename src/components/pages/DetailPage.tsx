@@ -32,7 +32,11 @@ export const DetailPage = () => {
   return (
     <div className="w-3/5 my-4 mx-auto">
       <div className="flex justify-between relative">
-        <Button size="small" className="absolute" onClick={() => navigate("/")}>
+        <Button
+          size="small"
+          className="absolute"
+          onClick={() => navigate("/spa-github")}
+        >
           Back
         </Button>
         <div></div>
